@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent" android:paddingTop="10dp" android:paddingLeft="16dp" android:paddingRight="16dp">
+  <EditText android:id="@+id/notepad" style="@style/Default.TextView" android:layout_width="match_parent" android:inputType="textPhonetic"></EditText>
+  <GridView android:id="@+id/keyboard" android:layout_width="match_parent" android:layout_height="200dp" android:layout_below="@id/notepad" android:columnWidth="25dp" android:numColumns="10" android:verticalSpacing="5dp" android:horizontalSpacing="5dp" android:stretchMode="columnWidth" android:gravity="center"></GridView>
+  <LinearLayout android:id="@+id/utility_row" android:layout_width="match_parent" android:layout_height="wrap_content" android:layout_below="@id/keyboard">
+    <Button android:id="@+id/space_bar" style="@style/Default.Button" android:text=""></Button>
+  </LinearLayout>
+</RelativeLayout><!-- From: file:/C:/Users/Mark/OneDrive/Work/Projects/IPANotepad/src/main/res/layout/main.xml -->

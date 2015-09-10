@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <string name="app_name">IPA Notepad</string>
+  <!--Menu Items-->
+  <string name="about">About</string>
+  <string name="donate">Donate</string>
+  <string name="settings">Settings</string>
+  <!--Messages-->
+  <!--Keyboard-->
+  <string-array name="keyboard_keys">
+    <!--Row 0-->
+    <!--Left Side-->
+    <item>o</item>
+    <item name="epsilon_hoOK">&#605;</item>
+    <item name="epsilon">&#603;</item>
+    <item>i</item>
+    <item name="antisigma">&#8580;</item>
+    <!--Right Side-->
+    <item>b</item>
+    <item>p</item>
+    <item>m</item>
+    <item>d</item>
+    <item>z</item>
+    <!--Row 1-->
+    <!--Left Side-->
+    <item>u</item>
+    <item name="ash">&#230;</item>
+    <item name="schwa">&#601;</item>
+    <item name="capital_i">&#618;</item>
+    <item name="turned_v">&#652;</item>
+    <!--Right Side-->
+    <item>l</item>
+    <item>r</item>
+    <item>n</item>
+    <item>t</item>
+    <item>s</item>
+    <!--Row 2-->
+    <!--Left Side-->
+    <item name="upsilon">&#650;</item>
+    <item>a</item>
+    <item name="schwar">&#602;</item>
+    <item>e</item>
+    <item name="glottal_stop">&#660;</item>
+    <!--Right Side-->
+    <item>h</item>
+    <item>w</item>
+    <item name="velar_nasaL">&#331;</item>
+    <item>v</item>
+    <item>f</item>
+    <!--Row 3-->
+    <item>&#32;</item>
+    <item name="emphasis">\'</item>
+    <item>k</item>
+    <item>g</item>
+    <item name="eth">&#240;</item>
+    <item name="theta">&#952;</item>
+    <item>j</item>
+    <item name="esh">&#643;</item>
+    <item name="ezh">&#658;</item>
+    <item>&#32;</item>
+  </string-array>
+</resources>

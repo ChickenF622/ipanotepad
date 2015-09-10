@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<resources>
+  <!--Bracketing-->
+  <string name="pref_slashing">Slashing</string>
+  <string name="pref_slashing_entries_summ">Specifiy how slashes are placed in the text</string>
+  <string name="pref_slashing_default">EACH_WORD</string>
+  <string-array name="pref_slashing_entries">
+    <item>Each Word</item>
+    <item>Entire Phrase</item>
+    <item>None</item>
+  </string-array>
+  <string-array name="pref_slashing_values">
+    <item>EACH_WORD</item>
+    <item>ENTIRE_PHRASE</item>
+    <item>NONE</item>
+  </string-array>
+</resources>

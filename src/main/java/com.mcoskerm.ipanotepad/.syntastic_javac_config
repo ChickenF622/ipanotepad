@@ -1,0 +1,1 @@
+let g:syntastic_java_javac_classpath = 'C:/Users/Mark/AppData/Local/Android/android-sdk/platforms/android-21/*.jar'
