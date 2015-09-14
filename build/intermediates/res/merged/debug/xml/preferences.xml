@@ -1,4 +1,0 @@
-<?xml version="1.0" encoding="utf-8" ?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apl/res/android">
-  <ListPreference android:key="pref_slashing" android:title="@string/pref_slashing" android:dialogTitle="@string/pref_slashing" android:summary="@string/pref_slashing_entries_summ" android:entries="@array/pref_slashing_entries" android:entryValues="@array/pref_slashing_values" android:defaultValue="@string/pref_slashing_default"></ListPreference>
-</PreferenceScreen><!-- From: file:/C:/Users/Mark/OneDrive/Work/Projects/IPANotepad/src/main/res/xml/preferences.xml -->
