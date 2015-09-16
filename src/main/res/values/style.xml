@@ -7,6 +7,10 @@
     <item name="android:layout_width">wrap_content</item>
     <item name="android:textSize">25sp</item>
   </style>
+  <style name="Keyboard">
+    <item name="android:layout_height">@dimen/keyboard_button_dim</item>
+    <item name="android:layout_width">@dimen/keyboard_button_dim</item>
+  </style>
   <style name="Default.Button">
     <item name="android:layout_width">fill_parent</item>
     <item name="android:textSize">50sp</item>

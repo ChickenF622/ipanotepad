@@ -4,6 +4,8 @@
   <!--Menu Items-->
   <string name="about">About</string>
   <string name="donate">Donate</string>
+  <string name="save">Save</string>
+  <string name="save_as">Save As...</string>
   <string name="settings">Settings</string>
   <!--Messages-->
   <!--Keyboard-->

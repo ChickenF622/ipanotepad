@@ -1,35 +1,47 @@
 doctype xml
-RelativeLayout(xmlns:android="http://schemas.android.com/apk/res/android",
-  android:orientation="vertical",
-  android:layout_width="match_parent",
-  android:layout_height="match_parent",
-  android:paddingTop="10dp",
-  android:paddingLeft="16dp",
+LinearLayout(xmlns:android="http://schemas.android.com/apk/res/android"
+  android:orientation="vertical"
+  android:layout_width="match_parent"
+  android:layout_height="match_parent"
+  android:paddingTop="10dp"
+  android:paddingLeft="16dp"
   android:paddingRight="16dp"
   )
-  EditText(android:id="@+id/notepad",
-    style="@style/Default.TextView",
-    android:layout_width="match_parent",
-    android:inputType="textPhonetic"
+  EditText(android:id="@+id/notepad"
+    style="@style/Default.TextView"
+    android:layout_width="match_parent"
+    android:inputType="none|textNoSuggestions"
+    android:textIsSelectable="true"
     )
-  GridView(android:id="@+id/keyboard",
-    android:layout_width="match_parent",
-    android:layout_height="200dp",
-    android:layout_below="@id/notepad",
-    android:columnWidth="25dp",
-    android:numColumns="10",
-    android:verticalSpacing="5dp",
-    android:horizontalSpacing="5dp",
-    android:stretchMode="columnWidth",
-    android:gravity="center",
+  GridView(android:id="@+id/keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:columnWidth="25dp"
+    android:numColumns="10"
+    android:verticalSpacing="5dp"
+    android:horizontalSpacing="5dp"
+    android:stretchMode="columnWidth"
+    android:gravity="center"
     )
   LinearLayout(android:id="@+id/utility_row"
-    android:layout_width="match_parent",
-    android:layout_height="wrap_content",
-    android:layout_below="@id/keyboard"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
     )
-    Button(android:id="@+id/space_bar"
-      style="@style/Default.Button"
-      android:text=""
+    Button(android:id="@+id/emphasis"
+      style="@style/Keyboard"
+      android:layout_marginLeft="-6dp"
+      android:text="\'"
       )
+    ImageButton(android:id="@+id/spacebar"
+      android:layout_width="273dp"
+      android:layout_height="@dimen/keyboard_button_dim"
+      android:layout_marginLeft="-7dp"
+      android:src="@drawable/ic_space_bar_white"
+      )
+    ImageButton(android:id="@+id/backspace"
+      style="@style/Keyboard"
+      android:layout_marginLeft="-7dp"
+      android:src="@drawable/ic_backspace_white"
+      )
+
 
