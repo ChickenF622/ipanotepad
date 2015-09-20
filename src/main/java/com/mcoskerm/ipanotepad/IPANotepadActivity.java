@@ -1,5 +1,7 @@
 package com.mcoskerm.ipanotepad;
 
+import java.io.File;
+
 import android.app.Activity;
 import android.os.Bundle;
 import android.content.Context;
@@ -14,6 +16,8 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ImageButton;
+
+import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import com.mcoskerm.ipanotepad.ButtonAdapter;
 import com.mcoskerm.ipanotepad.KeyboardClickListener;
@@ -53,6 +57,10 @@ public class IPANotepadActivity extends Activity
   {
     switch (item.getItemId())
     {
+      case R.id.save:
+        return true;
+      case R.id.save_as:
+        return true;
       /*case R.id.settings:
         Intent intent = new Intent(this, SettingsActivity.class);
         this.startActivity(intent);
@@ -62,7 +70,9 @@ public class IPANotepadActivity extends Activity
     }
   }
 
-  public void typeChar(View view)
+  @Override
+  public void attachBaseContext(Context newBase)
   {
+    super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
   }
 }

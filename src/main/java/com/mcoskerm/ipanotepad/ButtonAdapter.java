@@ -2,7 +2,7 @@ package com.mcoskerm.ipanotepad;
 
 import android.content.Context;
 import android.content.res.Resources;
-import android.util.Log;
+import android.graphics.Typeface;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -19,7 +19,6 @@ import com.mcoskerm.ipanotepad.KeyboardClickListener;
 
 public class ButtonAdapter extends BaseAdapter
 {
-  private static final String TAG = "ButtonAdapter";
   private Context context;
   private Resources res;
   private String[] buttonIds;
@@ -52,12 +51,13 @@ public class ButtonAdapter extends BaseAdapter
     if (convertView == null)
     {
       String keyText = this.buttonIds[position];
-      Log.d(TAG, "KEY: " + keyText);
       if (!keyText.equals(""))
       {
         Button button = new Button(this.context);
         button.setText(keyText);
+        button.setTypeface(Typeface.createFromAsset(this.context.getAssets(), "fonts/LGSmartGothic-Regular.ttf"));
         button.setAllCaps(false);
+        button.setOnClickListener(new KeyboardClickListener());
         key = (View) button;
       }
       int dim = (int) this.res.getDimension(R.dimen.keyboard_button_dim);
@@ -69,7 +69,6 @@ public class ButtonAdapter extends BaseAdapter
       key = (Button) convertView;
     }
     //Get the character the button corresponds to and add it to the notepad
-    key.setOnClickListener(new KeyboardClickListener());
     return key;
   }
 }

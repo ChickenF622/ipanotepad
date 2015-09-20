@@ -1,5 +1,12 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
+  <style name="AppTheme">
+    <item name="android:textViewStyle">@style/AppTheme.Widget.TextView</item>
+  </style>
+  <style name="AppTheme.Widget"></style>
+  <style name="AppTheme.Widget.TextView">
+    <item name="fontPath">font/LGSmartGothic-Regular.ttf</item>
+  </style>
   <style name="Default">
     <item name="android:layout_height">wrap_content</item>
   </style>
