@@ -1,18 +1,23 @@
 doctype xml
 resources
+  //-Define styles for the themes
   style(name="AppTheme")
     item(name="android:textViewStyle") @style/AppTheme.Widget.TextView
   style(name="AppTheme.Widget")
   style(name="AppTheme.Widget.TextView")
     item(name="fontPath") font/LGSmartGothic-Regular.ttf
+  //-Define styles for layout
   style(name="Default")
     item(name="android:layout_height") wrap_content
-  style(name="Default.TextView")
-    item(name="android:layout_width") wrap_content
-    item(name="android:textSize") 25sp
-  style(name="Keyboard")
-    item(name="android:layout_height") @dimen/keyboard_button_dim
-    item(name="android:layout_width") @dimen/keyboard_button_dim
   style(name="Default.Button")
     item(name="android:layout_width") fill_parent
     item(name="android:textSize") 50sp
+  style(name="Default.Container")
+    item(name="android:paddingTop") 10dp
+    item(name="android:paddingLeft") 16dp
+    item(name="android:paddingRight") 16dp
+  style(name="Default.TextView")
+    item(name="android:layout_width") wrap_content
+  style(name="Keyboard")
+    item(name="android:layout_height") @dimen/keyboard_button_dim
+    item(name="android:layout_width") @dimen/keyboard_button_dim

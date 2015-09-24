@@ -7,6 +7,9 @@
   <string name="save">Save</string>
   <string name="save_as">Save As...</string>
   <string name="settings">Settings</string>
+  <!--Dialog Strings-->
+  <string name="filename">Filename</string>
+  <string name="cancel">Cancel</string>
   <!--Messages-->
   <!--Keyboard-->
   <string-array name="keyboard_keys">

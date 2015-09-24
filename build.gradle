@@ -46,7 +46,5 @@ repositories {
 dependencies {
   compile fileTree(dir: 'libs', include: ['*.jar'])
   compile 'com.android.support:appcompat-v7:22.0.0'
-  //compile (name:'calligraphy-2.1.0', ext:'aar')
   compile 'uk.co.chrisjenx:calligraphy:2.1.0@aar'
-  //testCompile 'junit:junit:4.+'
 }

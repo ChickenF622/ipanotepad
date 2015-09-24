@@ -10,16 +10,20 @@
   <style name="Default">
     <item name="android:layout_height">wrap_content</item>
   </style>
+  <style name="Default.Button">
+    <item name="android:layout_width">fill_parent</item>
+    <item name="android:textSize">50sp</item>
+  </style>
+  <style name="Default.Container">
+    <item name="android:paddingTop">10dp</item>
+    <item name="android:paddingLeft">16dp</item>
+    <item name="android:paddingRight">16dp</item>
+  </style>
   <style name="Default.TextView">
     <item name="android:layout_width">wrap_content</item>
-    <item name="android:textSize">25sp</item>
   </style>
   <style name="Keyboard">
     <item name="android:layout_height">@dimen/keyboard_button_dim</item>
     <item name="android:layout_width">@dimen/keyboard_button_dim</item>
-  </style>
-  <style name="Default.Button">
-    <item name="android:layout_width">fill_parent</item>
-    <item name="android:textSize">50sp</item>
   </style>
 </resources>

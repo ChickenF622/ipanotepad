@@ -3,6 +3,8 @@ package com.mcoskerm.ipanotepad;
 import java.io.File;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.DialogFragment;
 import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
@@ -21,6 +23,7 @@ import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import com.mcoskerm.ipanotepad.ButtonAdapter;
 import com.mcoskerm.ipanotepad.KeyboardClickListener;
+import com.mcoskerm.ipanotepad.SaveAsFragment;
 import com.mcoskerm.ipanotepad.SettingsActivity;
 
 public class IPANotepadActivity extends Activity
@@ -60,6 +63,8 @@ public class IPANotepadActivity extends Activity
       case R.id.save:
         return true;
       case R.id.save_as:
+        DialogFragment saveAsFragment = new SaveAsFragment();
+        saveAsFragment.show(getFragmentManager(), "save_as");
         return true;
       /*case R.id.settings:
         Intent intent = new Intent(this, SettingsActivity.class);
