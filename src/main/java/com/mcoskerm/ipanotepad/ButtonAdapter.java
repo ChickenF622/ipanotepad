@@ -3,6 +3,7 @@ package com.mcoskerm.ipanotepad;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -53,12 +54,23 @@ public class ButtonAdapter extends BaseAdapter
       String keyText = this.buttonIds[position];
       if (!keyText.equals(""))
       {
-        Button button = new Button(this.context);
-        button.setText(keyText);
-        button.setTypeface(Typeface.createFromAsset(this.context.getAssets(), "fonts/LGSmartGothic-Regular.ttf"));
-        button.setAllCaps(false);
-        button.setOnClickListener(new KeyboardClickListener());
-        key = (View) button;
+        if (keyText.equals("BACKSPACE"))
+        {
+          ImageButton imgButton = new ImageButton(this.context);
+          Drawable icon = this.res.getDrawable(R.drawable.ic_backspace_white);
+          imgButton.setImageDrawable(icon);
+          imgButton.setOnClickListener(new KeyboardClickListener(false));
+          key = (View) imgButton;
+        }
+        else
+        {
+          Button textButton = new Button(this.context);
+          textButton.setText(keyText);
+          textButton.setTypeface(Typeface.createFromAsset(this.context.getAssets(), "fonts/LGSmartGothic-Regular.ttf"));
+          textButton.setAllCaps(false);
+          textButton.setOnClickListener(new KeyboardClickListener());
+          key = (View) textButton;
+        }
       }
       int dim = (int) this.res.getDimension(R.dimen.keyboard_button_dim);
       key.setLayoutParams(new GridView.LayoutParams(dim, dim));

@@ -35,16 +35,16 @@ public class IPANotepadActivity extends Activity
       super.onCreate(savedInstanceState);
       PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
       setContentView(R.layout.main);
-      GridView keyboard = (GridView) this.findViewById(R.id.keyboard);
+      GridView keyboard = (GridView) this.findViewById(R.id.keyboard_main);
       //Adapater handles the OnClick event since buttons are being used in this GridView
       keyboard.setAdapter(new ButtonAdapter(this));
       //Handle the other keys that are not included in the GridView
-      ImageButton backspace = (ImageButton) this.findViewById(R.id.backspace);
+      ImageButton backspace = (ImageButton) this.findViewById(R.id.newline);
       Button emphasis = (Button) this.findViewById(R.id.emphasis);
       ImageButton spacebar = (ImageButton) this.findViewById(R.id.spacebar);
       emphasis.setOnClickListener(new KeyboardClickListener());
       spacebar.setOnClickListener(new KeyboardClickListener());
-      backspace.setOnClickListener(new KeyboardClickListener(false));
+      backspace.setOnClickListener(new KeyboardClickListener());
   }
 
   @Override

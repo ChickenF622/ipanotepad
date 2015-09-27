@@ -40,6 +40,10 @@ public class KeyboardClickListener implements View.OnClickListener
         Button button = (Button) view;
         character = (String) button.getText();
       }
+      else if (view.getId() == R.id.newline)
+      {
+        character = "\n";
+      }
     }
     else //Backspace was clicked so delete a the selection instead of replacing it
     {

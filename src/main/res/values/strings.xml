@@ -54,7 +54,7 @@
     <item>f</item>
     <!--Row 3-->
     <item>&#32;</item>
-    <item name="emphasis">\'</item>
+    <item>&#32;</item>
     <item>k</item>
     <item>g</item>
     <item name="eth">&#240;</item>
@@ -62,6 +62,6 @@
     <item>j</item>
     <item name="esh">&#643;</item>
     <item name="ezh">&#658;</item>
-    <item>&#32;</item>
+    <item name="backspace">BACKSPACE</item>
   </string-array>
 </resources>

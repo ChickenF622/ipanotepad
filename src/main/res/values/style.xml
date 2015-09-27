@@ -21,6 +21,7 @@
   </style>
   <style name="Default.TextView">
     <item name="android:layout_width">wrap_content</item>
+    <item name="android:gravity">top</item>
   </style>
   <style name="Keyboard">
     <item name="android:layout_height">@dimen/keyboard_button_dim</item>
