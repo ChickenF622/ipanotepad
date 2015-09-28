@@ -1,7 +1,5 @@
 package com.mcoskerm.ipanotepad;
 
-import java.io.File;
-
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.DialogFragment;
@@ -16,12 +14,14 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 import com.mcoskerm.ipanotepad.ButtonAdapter;
+import com.mcoskerm.ipanotepad.FileSystem;
 import com.mcoskerm.ipanotepad.KeyboardClickListener;
 import com.mcoskerm.ipanotepad.SaveAsFragment;
 import com.mcoskerm.ipanotepad.SettingsActivity;
@@ -61,10 +61,21 @@ public class IPANotepadActivity extends Activity
     switch (item.getItemId())
     {
       case R.id.save:
+        FileSystem fs = FileSystem.getInstance();
+        //If this file has already been written then write the content directly
+        if (fs.wasWritten())
+        {
+          EditText notepad = (EditText) this.findViewById(R.id.notepad);
+          String content = notepad.getText().toString();
+          fs.save(content);
+        }
+        else
+        {
+          this.displaySaveAs();
+        }
         return true;
       case R.id.save_as:
-        DialogFragment saveAsFragment = new SaveAsFragment();
-        saveAsFragment.show(getFragmentManager(), "save_as");
+        this.displaySaveAs();
         return true;
       /*case R.id.settings:
         Intent intent = new Intent(this, SettingsActivity.class);
@@ -75,6 +86,18 @@ public class IPANotepadActivity extends Activity
     }
   }
 
+  /**
+   * Displays the save as fragment
+   */
+  private void displaySaveAs()
+  {
+    DialogFragment saveAsFragment = new SaveAsFragment();
+    saveAsFragment.show(getFragmentManager(), "save_as");
+  }
+
+  /**
+   * Adding the CalligraphyContextWrapper to the base context of the app to allow for the font to be modified
+   */
   @Override
   public void attachBaseContext(Context newBase)
   {

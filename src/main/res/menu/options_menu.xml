@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:id="@+id/save_as" android:title="@string/save_as"></item>
-  <item android:id="@+id/save" android:title="@string/save"></item>
+  <item android:id="@+id/save" android:title="@string/save" android:icon="@drawable/ic_save_white" android:showAsAction="ifRoom"></item>
 </menu>
 <!--
 item(android:id="@+id/about"

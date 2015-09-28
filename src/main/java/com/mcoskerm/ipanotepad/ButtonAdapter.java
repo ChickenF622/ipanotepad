@@ -31,21 +31,39 @@ public class ButtonAdapter extends BaseAdapter
     this.buttonIds = this.res.getStringArray(R.array.keyboard_keys);
   }
 
+  /**
+   * Gets the number of buttons that are being created
+   * @return The number of buttons that are being created
+   */
   public int getCount()
   {
     return buttonIds.length;
   }
 
+  /**
+   * Method needed for BaseAdapter extension, always returns null
+   * @return null
+   */
   public Object getItem(int pos)
   {
     return null;
   }
 
+  /**
+   * Method needed for BaseAdapter extension, always returns 0
+   * @return 0
+   */
   public long getItemId(int pos)
   {
     return 0;
   }
 
+  /**
+   * Creates the View for the given position
+   * @param position The position of the view that is being created
+   * @param convertView The already created view, if it exists, that needs to be converted
+   * @param parent The parent that holds all of the views being created
+   */
   public View getView(int position, View convertView, ViewGroup parent)
   {
     View key = new View(this.context);
@@ -78,7 +96,7 @@ public class ButtonAdapter extends BaseAdapter
     }
     else
     {
-      key = (Button) convertView;
+      key = convertView;
     }
     //Get the character the button corresponds to and add it to the notepad
     return key;
