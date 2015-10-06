@@ -75,7 +75,7 @@ public class ButtonAdapter extends BaseAdapter
         if (keyText.equals("BACKSPACE"))
         {
           ImageButton imgButton = new ImageButton(this.context);
-          Drawable icon = this.res.getDrawable(R.drawable.ic_backspace_white);
+          Drawable icon = this.res.getDrawable(R.drawable.ic_backspace_white, null);
           imgButton.setImageDrawable(icon);
           imgButton.setOnClickListener(new KeyboardClickListener(false));
           key = (View) imgButton;

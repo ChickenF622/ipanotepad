@@ -35,6 +35,7 @@ public class IPANotepadActivity extends Activity
       super.onCreate(savedInstanceState);
       PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
       setContentView(R.layout.main);
+      FileSystem fs = FileSystem.getInstance(this);
       GridView keyboard = (GridView) this.findViewById(R.id.keyboard_main);
       //Adapater handles the OnClick event since buttons are being used in this GridView
       keyboard.setAdapter(new ButtonAdapter(this));
@@ -45,6 +46,17 @@ public class IPANotepadActivity extends Activity
       emphasis.setOnClickListener(new KeyboardClickListener());
       spacebar.setOnClickListener(new KeyboardClickListener());
       backspace.setOnClickListener(new KeyboardClickListener());
+      //Read any data from previous instance of hte notepad into the new instance
+      EditText notepad = (EditText) this.findViewById(R.id.notepad);
+      String prevDiction = fs.readPrivate("current_diction");
+      notepad.setText(prevDiction);
+  }
+
+  @Override
+  public void onPause()
+  {
+    FileSystem fs = FileSystem.getInstance(this);
+    fs.savePrivate("current_diction", this.getNotepadContent());
   }
 
   @Override
@@ -61,13 +73,11 @@ public class IPANotepadActivity extends Activity
     switch (item.getItemId())
     {
       case R.id.save:
-        FileSystem fs = FileSystem.getInstance();
+        FileSystem fs = FileSystem.getInstance(null);
         //If this file has already been written then write the content directly
         if (fs.wasWritten())
         {
-          EditText notepad = (EditText) this.findViewById(R.id.notepad);
-          String content = notepad.getText().toString();
-          fs.save(content);
+          fs.save(this.getNotepadContent());
         }
         else
         {
@@ -93,6 +103,12 @@ public class IPANotepadActivity extends Activity
   {
     DialogFragment saveAsFragment = new SaveAsFragment();
     saveAsFragment.show(getFragmentManager(), "save_as");
+  }
+
+  private String getNotepadContent()
+  {
+    EditText notepad = (EditText) this.findViewById(R.id.notepad);
+    return notepad.getText().toString();
   }
 
   /**

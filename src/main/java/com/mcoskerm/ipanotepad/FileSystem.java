@@ -1,8 +1,12 @@
 package com.mcoskerm.ipanotepad;
 
+import java.io.BufferedReader;
 import java.io.File;
-import java.io.IOException;
+import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+//import java.io.StringBuffer;
 
 import android.content.Context;
 import android.os.Environment;
@@ -16,6 +20,8 @@ public class FileSystem
   private static FileSystem instance;
   private static final String TAG = "com.mcoskerm.ipanotepad.FileSystem";
   private String lastSavedFile;
+  private Context context;
+
   private FileSystem()
   {
     this.lastSavedFile = "";
@@ -35,12 +41,13 @@ public class FileSystem
    * Gets the singleton instance of the class
    * @return The singleton instance of the class
    */
-  public static FileSystem getInstance()
+  public static FileSystem getInstance(Context context)
   {
     if (instance == null)
     {
       instance = new FileSystem();
     }
+    instance.context = context;
     return instance;
   }
 
@@ -51,6 +58,48 @@ public class FileSystem
   public boolean wasWritten()
   {
     return !this.lastSavedFile.isEmpty();
+  }
+
+  /**
+   * Writes a file to the app's private storage
+   */
+  public void savePrivate(String filename, String content)
+  {
+    if (this.context == null)
+    {
+      Log.e(TAG, "Cannot access private files without context");
+    }
+    try
+    {
+      FileOutputStream fout = this.context.openFileOutput(filename, Context.MODE_PRIVATE);
+      fout.write(content.getBytes());
+      fout.close();
+    }
+    catch (IOException err)
+    {
+      Log.e(TAG, "Unable to write private file");
+    }
+  }
+
+  public String readPrivate(String filename)
+  {
+    if (this.context == null)
+    {
+      Log.e(TAG, "Cannot access private files without context");
+    }
+    try
+    {
+      FileInputStream fin = this.context.openFileInput(filename);
+      byte[] content = new byte[(int) fin.getChannel().size()];
+      fin.read(content);
+      fin.close();
+      return new String(content, "UTF-8");
+    }
+    catch (IOException err)
+    {
+      Log.e(TAG, "Unable to read private file");
+    }
+    return "";
   }
 
   /**
@@ -84,9 +133,9 @@ public class FileSystem
       {
         dictionDir.mkdirs();
       }
-      File diction = new File(dictionDir, filename);
       try
       {
+        File diction = new File(dictionDir, filename);
         FileOutputStream fout = new FileOutputStream(diction);
         fout.write(content.getBytes());
         fout.close();

@@ -19,7 +19,7 @@ public class SaveAsFragment extends DialogFragment
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState)
   {
-    final FileSystem fs = FileSystem.getInstance();
+    final FileSystem fs = FileSystem.getInstance(null);
     final Resources res = this.getResources();
     AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
     LayoutInflater inflater = this.getActivity().getLayoutInflater();
