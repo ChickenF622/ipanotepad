@@ -13,5 +13,6 @@ public class Application extends android.app.Application
         .setFontAttrId(R.attr.fontPath)
         .build()
         );
+    Diction.getInstance();
   }
 }

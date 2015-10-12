@@ -11,7 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.mcoskerm.ipanotepad.FileSystem;
+import com.mcoskerm.ipanotepad.Diction;
 
 public class SaveAsFragment extends DialogFragment
 {
@@ -19,7 +19,6 @@ public class SaveAsFragment extends DialogFragment
   @Override
   public Dialog onCreateDialog(Bundle savedInstanceState)
   {
-    final FileSystem fs = FileSystem.getInstance(null);
     final Resources res = this.getResources();
     AlertDialog.Builder builder = new AlertDialog.Builder(this.getActivity());
     LayoutInflater inflater = this.getActivity().getLayoutInflater();
@@ -32,10 +31,9 @@ public class SaveAsFragment extends DialogFragment
             {
               AlertDialog alertDialog = (AlertDialog) dialog;
               EditText filenameField = (EditText) view.findViewById(R.id.filename);
-              EditText notepad = (EditText) alertDialog.getOwnerActivity().findViewById(R.id.notepad);
+              Diction diction = Diction.getInstance();
               String filename = filenameField.getText().toString();
-              String content = notepad.getText().toString();
-              fs.save(filename, content);
+              diction.save(filename);
               //Include the name of the file that was written in the action bar so the user knows what file
               //they are working on
               ActionBar actionBar = alertDialog.getOwnerActivity().getActionBar();

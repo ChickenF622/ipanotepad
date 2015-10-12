@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/Default.Container" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
-  <ScrollView android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1">
-    <EditText android:id="@+id/notepad" style="@style/Default.TextView" android:layout_width="match_parent" android:layout_height="match_parent" android:inputType="none|textNoSuggestions|textMultiLine" android:textIsSelectable="true"></EditText>
-  </ScrollView>
+  <ScrollView android:id="@+id/notepad_container" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"></ScrollView>
   <LinearLayout android:id="@+id/keyboard" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical">
     <GridView android:id="@+id/keyboard_main" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnWidth="25dp" android:numColumns="10" android:verticalSpacing="5dp" android:horizontalSpacing="5dp" android:stretchMode="columnWidth" android:gravity="center"></GridView>
     <LinearLayout android:id="@+id/utility_row" android:layout_width="match_parent" android:layout_height="wrap_content">

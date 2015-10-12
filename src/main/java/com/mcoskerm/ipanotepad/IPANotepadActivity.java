@@ -20,43 +20,37 @@ import android.widget.ImageButton;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
-import com.mcoskerm.ipanotepad.ButtonAdapter;
-import com.mcoskerm.ipanotepad.FileSystem;
-import com.mcoskerm.ipanotepad.KeyboardClickListener;
-import com.mcoskerm.ipanotepad.SaveAsFragment;
-import com.mcoskerm.ipanotepad.SettingsActivity;
-
 public class IPANotepadActivity extends Activity
 {
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState)
   {
-      super.onCreate(savedInstanceState);
-      PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-      setContentView(R.layout.main);
-      FileSystem fs = FileSystem.getInstance(this);
-      GridView keyboard = (GridView) this.findViewById(R.id.keyboard_main);
-      //Adapater handles the OnClick event since buttons are being used in this GridView
-      keyboard.setAdapter(new ButtonAdapter(this));
-      //Handle the other keys that are not included in the GridView
-      ImageButton backspace = (ImageButton) this.findViewById(R.id.newline);
-      Button emphasis = (Button) this.findViewById(R.id.emphasis);
-      ImageButton spacebar = (ImageButton) this.findViewById(R.id.spacebar);
-      emphasis.setOnClickListener(new KeyboardClickListener());
-      spacebar.setOnClickListener(new KeyboardClickListener());
-      backspace.setOnClickListener(new KeyboardClickListener());
-      //Read any data from previous instance of hte notepad into the new instance
-      EditText notepad = (EditText) this.findViewById(R.id.notepad);
-      String prevDiction = fs.readPrivate("current_diction");
-      notepad.setText(prevDiction);
+    super.onCreate(savedInstanceState);
+    PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
+    setContentView(R.layout.main);
+    NotepadFragment notepad = new NotepadFragment();
+    this.getFragmentManager().beginTransaction()
+      .add(R.id.notepad_container, notepad, "notepad_fragment")
+      .commit();
+    GridView keyboard = (GridView) this.findViewById(R.id.keyboard_main);
+    //Adapater handles the OnClick event since buttons are being used in this GridView
+    keyboard.setAdapter(new ButtonAdapter(this));
+    //Handle the other keys that are not included in the GridView
+    ImageButton backspace = (ImageButton) this.findViewById(R.id.newline);
+    Button emphasis = (Button) this.findViewById(R.id.emphasis);
+    ImageButton spacebar = (ImageButton) this.findViewById(R.id.spacebar);
+    emphasis.setOnClickListener(new KeyboardClickListener());
+    spacebar.setOnClickListener(new KeyboardClickListener());
+    backspace.setOnClickListener(new KeyboardClickListener());
   }
 
   @Override
   public void onPause()
   {
-    FileSystem fs = FileSystem.getInstance(this);
-    fs.savePrivate("current_diction", this.getNotepadContent());
+    super.onPause();
+    Diction diction = Diction.getInstance();
+    diction.save(this);
   }
 
   @Override
@@ -73,11 +67,11 @@ public class IPANotepadActivity extends Activity
     switch (item.getItemId())
     {
       case R.id.save:
-        FileSystem fs = FileSystem.getInstance(null);
+        Diction diction = Diction.getInstance();
         //If this file has already been written then write the content directly
-        if (fs.wasWritten())
+        if (diction.wasSaved())
         {
-          fs.save(this.getNotepadContent());
+          diction.resave();
         }
         else
         {
@@ -87,10 +81,10 @@ public class IPANotepadActivity extends Activity
       case R.id.save_as:
         this.displaySaveAs();
         return true;
-      /*case R.id.settings:
+      case R.id.settings:
         Intent intent = new Intent(this, SettingsActivity.class);
         this.startActivity(intent);
-        return true;*/
+        return true;
       default:
         return super.onOptionsItemSelected(item);
     }
@@ -103,12 +97,6 @@ public class IPANotepadActivity extends Activity
   {
     DialogFragment saveAsFragment = new SaveAsFragment();
     saveAsFragment.show(getFragmentManager(), "save_as");
-  }
-
-  private String getNotepadContent()
-  {
-    EditText notepad = (EditText) this.findViewById(R.id.notepad);
-    return notepad.getText().toString();
   }
 
   /**

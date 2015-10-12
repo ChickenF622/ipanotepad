@@ -28,16 +28,6 @@ public class FileSystem
   }
 
   /**
-   * Determines whether or not the storage is currently writable
-   * @return Whether or not the storage is currently writable
-   */
-  private boolean isStorageWritable()
-  {
-    String state = Environment.getExternalStorageState();
-    return Environment.MEDIA_MOUNTED.equals(state);
-  }
-
-  /**
    * Gets the singleton instance of the class
    * @return The singleton instance of the class
    */
@@ -49,6 +39,16 @@ public class FileSystem
     }
     instance.context = context;
     return instance;
+  }
+
+  /**
+   * Determines whether or not the storage is currently writable
+   * @return Whether or not the storage is currently writable
+   */
+  private boolean isStorageWritable()
+  {
+    String state = Environment.getExternalStorageState();
+    return state.equals(Environment.MEDIA_MOUNTED);
   }
 
   /**
