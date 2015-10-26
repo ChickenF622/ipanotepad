@@ -41,6 +41,11 @@ public class FileSystem
     return instance;
   }
 
+  public File getDictionDir()
+  {
+    return new File(this.context.getFilesDir(), "dictions");
+  }
+
   /**
    * Determines whether or not the storage is currently writable
    * @return Whether or not the storage is currently writable
@@ -63,7 +68,7 @@ public class FileSystem
   /**
    * Writes a file to the app's private storage
    */
-  public void savePrivate(String filename, String content)
+  public boolean save(String filename, String content)
   {
     if (this.context == null)
     {
@@ -71,17 +76,36 @@ public class FileSystem
     }
     try
     {
-      FileOutputStream fout = this.context.openFileOutput(filename, Context.MODE_PRIVATE);
+      File dictionDir = this.getDictionDir();
+      if (!dictionDir.exists())
+      {
+        dictionDir.mkdirs();
+      }
+      File diction = new File(dictionDir, filename);
+      FileOutputStream fout = new FileOutputStream(diction);
+      //FileOutputStream fout = this.context.openFileOutput(filename, Context.MODE_PRIVATE);
       fout.write(content.getBytes());
       fout.close();
+      return true;
     }
     catch (IOException err)
     {
-      Log.e(TAG, "Unable to write private file");
+      Log.e(TAG, "Unable to write private file", err);
+      return false;
     }
   }
 
-  public String readPrivate(String filename)
+  /**
+   * Saves the current content to the most recently saved document
+   * @param content The content to save
+   * @return Whether or not the save was successful
+   */
+  public boolean save(String content)
+  {
+    return this.save(this.lastSavedFile, content);
+  }
+
+  public String read(String filename)
   {
     if (this.context == null)
     {
@@ -103,31 +127,19 @@ public class FileSystem
   }
 
   /**
-   * Saves the current content to the most recently saved document
-   * @param content The content to save
-   * @return Whether or not the save was successful
-   */
-  public boolean save(String content)
-  {
-    return this.save(this.lastSavedFile, content);
-  }
-
-  /**
    * Saves the current content to the specified filename
    * @param filename The name of the file to write to
    * @param content The content to save
    * @return Whether or not the save was successful
    */
-  public boolean save(String filename, String content)
+ /* public boolean save(String filename, String content)
   {
     boolean success = false;
     if (this.isStorageWritable())
     {
-      File documents = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOCUMENTS);
       this.lastSavedFile = filename;
       filename += ".txt";
-      String dictionPath = "IPANotepad/dictions";
-      File dictionDir = new File(documents, dictionPath);
+      File dictionDir = this.getDictionDir();
       //Create any necessary directories
       if (!dictionDir.exists())
       {
@@ -147,5 +159,5 @@ public class FileSystem
       }
     }
     return success;
-  }
+  }*/
 }

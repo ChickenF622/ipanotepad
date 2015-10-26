@@ -1,5 +1,7 @@
 package com.mcoskerm.ipanotepad;
 
+import java.io.File;
+
 import android.content.Context;
 import android.text.Editable;
 import android.util.Log;
@@ -9,9 +11,11 @@ import android.widget.EditText;
 
 public class Diction
 {
+  public static final String CACHE_NAME = "__current_diction__";
   private final String SLASH_CHAR = "/";
   private final String TAG = "Diction";
   private static Diction instance;
+  private Context context;
   private EditText notepad;
   private String slashingPref;
   private String text;
@@ -33,7 +37,26 @@ public class Diction
     return instance;
   }
 
-  private void setText(String text)
+  private void setCursor(int pos)
+  {
+    this.notepad.setSelection(pos);
+  }
+
+  public File getDir()
+  {
+    return FileSystem.getInstance(this.context).getDictionDir();
+  }
+
+  /**
+   * Gets the text of the diction
+   * @return The text of the diction
+   */
+  public String getText()
+  {
+    return this.text;
+  }
+
+  public void setText(String text)
   {
     this.text = text;
     this.notepad.setText(text);
@@ -41,17 +64,38 @@ public class Diction
   }
 
   /**
-   * Gets the text of the notepad EditText as a String
-   * @return The text of the notepad EditText as a String
+   * Gets the text from the notepad Edittext directly
+   * @return The text of the notepad EditText
    */
-  public String getText()
-  {
-    return this.text;
-  }
-
   private String getNotepadText()
   {
     return this.notepad.getText().toString();
+  }
+
+  /**
+   * Sets the notepad EditText that the class will modify
+   * @param notepad The EditText that the class will modify
+   */
+  public void setNotepad(EditText notepad)
+  {
+    this.notepad = notepad;
+    this.text = this.getNotepadText();
+    this.context = notepad.getContext();
+  }
+
+  public boolean isEmpty()
+  {
+    return this.getNotepadText().isEmpty();
+  }
+
+  /**
+   * Changes the current slashing preference and updates the text accordingly
+   * @param slashingPref The slasing preference to change to
+   */
+  public void setSlashing(String slashingPref)
+  {
+    this.slashingPref = slashingPref;
+    this.updateSlashing();
   }
 
   /**
@@ -129,26 +173,6 @@ public class Diction
     return FileSystem.getInstance(null).wasWritten();
   }
 
-
-  /**
-   * Sets the notepad EditText that the class will modify
-   * @param notepad The EditText that the class will modify
-   */
-  public void setNotepad(EditText notepad)
-  {
-    this.notepad = notepad;
-  }
-
-  /**
-   * Changes the current slashing preference and updates the text accordingly
-   * @param slashingPref The slasing preference to change to
-   */
-  public void setSlashing(String slashingPref)
-  {
-    this.slashingPref = slashingPref;
-    this.updateSlashing();
-  }
-
   private String add(View key)
   {
     String character = " ";
@@ -165,6 +189,13 @@ public class Diction
     return character;
   }
 
+  /**
+   * Gives the position of the text that needs to be removed
+   * @param text The text that is having characters removed from it
+   * @param start The initial start of the selection
+   * @param end The initial end of the selection
+   * @return The new start position that will remove the characters that are needed depending on the slashing rules
+   */
   private int remove(String text, int start, int end)
   {
     //No selection has been made so delete the character to the left of the cursor
@@ -227,11 +258,10 @@ public class Diction
    * Reloads the previously auto-saved diction back into the notepad
    * @param context The context of the app
    */
-  public void reload(Context context)
+  public void reload()
   {
-    FileSystem fs = FileSystem.getInstance(context);
-    Diction diction = Diction.getInstance();
-    String prevDiction = fs.readPrivate("current_diction");
+    FileSystem fs = FileSystem.getInstance(this.context);
+    String prevDiction = fs.read(CACHE_NAME);
     this.setText(prevDiction);
   }
 
@@ -240,7 +270,7 @@ public class Diction
    */
   public void resave()
   {
-    FileSystem fs = FileSystem.getInstance(null);
+    FileSystem fs = FileSystem.getInstance(this.context);
     fs.save(this.getNotepadText());
   }
 
@@ -248,10 +278,10 @@ public class Diction
    * Saves the current working diction in the app's private files
    * @param context The context of the app used to access its private files
    */
-  public void save(Context context)
+  public void save()
   {
-    FileSystem fs = FileSystem.getInstance(context);
-    fs.savePrivate("current_diction", this.getNotepadText());
+    FileSystem fs = FileSystem.getInstance(this.context);
+    fs.save(CACHE_NAME, this.getNotepadText());
   }
 
   /**
@@ -259,7 +289,7 @@ public class Diction
    */
   public void save(String filename)
   {
-    FileSystem fs = FileSystem.getInstance(null);
+    FileSystem fs = FileSystem.getInstance(this.context);
     fs.save(filename, this.getNotepadText());
   }
 }

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <resources>
   <string name="app_name">IPA Notepad</string>
+  <string name="file_selector">File Selector</string>
   <!--Menu Items-->
   <string name="about">About</string>
   <string name="donate">Donate</string>
   <string name="save">Save</string>
   <string name="save_as">Save As...</string>
   <string name="settings">Settings</string>
+  <string name="share">Share</string>
   <!--Dialog Strings-->
   <string name="filename">Filename</string>
   <string name="cancel">Cancel</string>

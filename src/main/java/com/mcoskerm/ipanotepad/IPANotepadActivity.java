@@ -50,7 +50,7 @@ public class IPANotepadActivity extends Activity
   {
     super.onPause();
     Diction diction = Diction.getInstance();
-    diction.save(this);
+    diction.save();
   }
 
   @Override
@@ -64,10 +64,11 @@ public class IPANotepadActivity extends Activity
   @Override
   public boolean onOptionsItemSelected(MenuItem item)
   {
+    Intent intent;
+    Diction diction = Diction.getInstance();
     switch (item.getItemId())
     {
       case R.id.save:
-        Diction diction = Diction.getInstance();
         //If this file has already been written then write the content directly
         if (diction.wasSaved())
         {
@@ -82,7 +83,15 @@ public class IPANotepadActivity extends Activity
         this.displaySaveAs();
         return true;
       case R.id.settings:
-        Intent intent = new Intent(this, SettingsActivity.class);
+        intent = new Intent(this, SettingsActivity.class);
+        this.startActivity(intent);
+        return true;
+      case R.id.share:
+        intent = new Intent();
+        intent.setAction(Intent.ACTION_SEND);
+        intent.putExtra(Intent.EXTRA_TEXT, diction.getText());
+        intent.setType("text/plain");
+        //intent = new Intent(this, FileSelectActivity.class);
         this.startActivity(intent);
         return true;
       default:

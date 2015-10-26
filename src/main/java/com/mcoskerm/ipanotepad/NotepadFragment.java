@@ -26,7 +26,11 @@ class NotepadFragment extends Fragment
     EditText notepad = (EditText) this.getView().findViewById(R.id.notepad);
     Diction diction = Diction.getInstance();
     diction.setNotepad(notepad);
-    //diction.reload(this.getActivity());
+    //If no text is in the current working diction reload the auto-saved diction
+    if (diction.isEmpty())
+    {
+      diction.reload();
+    }
   }
 
   @Override
