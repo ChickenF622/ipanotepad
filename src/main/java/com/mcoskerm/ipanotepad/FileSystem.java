@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
+import java.io.FileReader;
 import java.io.IOException;
 //import java.io.StringBuffer;
 
@@ -41,9 +42,28 @@ public class FileSystem
     return instance;
   }
 
-  public File getDictionDir()
+  /**
+   * Gets the directory that holds all the saved dictions
+   * @return The directory that holds all the saved dictions
+   * @throws FileNotFoundException If there is no context for the FileSystem instance
+   */
+  public File getDictionDir() throws FileNotFoundException
   {
+    this.checkForContext();
     return new File(this.context.getFilesDir(), "dictions");
+  }
+
+  /**
+   * Checks to see if the FileSystem instance has a Context instance to operate on if it doesn't
+   * a FileNotFoundException is thrown since the file cannot be access
+   * @throws FileNotFoundException If the FileSystem instance doesn't have a Context instance
+   */
+  private void checkForContext() throws FileNotFoundException
+  {
+    if (this.context == null)
+    {
+      throw new FileNotFoundException("Unable to access file without context");
+    }
   }
 
   /**
@@ -67,97 +87,66 @@ public class FileSystem
 
   /**
    * Writes a file to the app's private storage
+   * @param filename The name of the file to save
+   * @param content The content to write to the file
+   * @throws IOException If there is any error writing the file
    */
-  public boolean save(String filename, String content)
+  public void save(String filename, String content) throws IOException
   {
-    if (this.context == null)
+    this.checkForContext();
+    File dictionDir = this.getDictionDir();
+    if (!dictionDir.exists())
     {
-      Log.e(TAG, "Cannot access private files without context");
+      dictionDir.mkdirs();
     }
+    File diction = new File(dictionDir, filename);
+    FileOutputStream fout = new FileOutputStream(diction);
     try
     {
-      File dictionDir = this.getDictionDir();
-      if (!dictionDir.exists())
-      {
-        dictionDir.mkdirs();
-      }
-      File diction = new File(dictionDir, filename);
-      FileOutputStream fout = new FileOutputStream(diction);
-      //FileOutputStream fout = this.context.openFileOutput(filename, Context.MODE_PRIVATE);
       fout.write(content.getBytes());
-      fout.close();
-      return true;
     }
-    catch (IOException err)
+    finally
     {
-      Log.e(TAG, "Unable to write private file", err);
-      return false;
+      fout.close();
     }
   }
 
   /**
    * Saves the current content to the most recently saved document
    * @param content The content to save
-   * @return Whether or not the save was successful
+   * @throws IOException If there is any error writing the file
    */
-  public boolean save(String content)
+  public void save(String content) throws IOException
   {
-    return this.save(this.lastSavedFile, content);
-  }
-
-  public String read(String filename)
-  {
-    if (this.context == null)
-    {
-      Log.e(TAG, "Cannot access private files without context");
-    }
-    try
-    {
-      FileInputStream fin = this.context.openFileInput(filename);
-      byte[] content = new byte[(int) fin.getChannel().size()];
-      fin.read(content);
-      fin.close();
-      return new String(content, "UTF-8");
-    }
-    catch (IOException err)
-    {
-      Log.e(TAG, "Unable to read private file");
-    }
-    return "";
+    this.save(this.lastSavedFile, content);
   }
 
   /**
-   * Saves the current content to the specified filename
-   * @param filename The name of the file to write to
-   * @param content The content to save
-   * @return Whether or not the save was successful
+   * Reads the file of the given filename and returns its contents
+   * @param filename The name of the file to read
+   * @return The content of the file of the given filename
+   * @throws IOException If there is any error reading the file
    */
- /* public boolean save(String filename, String content)
+  public String read(String filename) throws IOException
   {
-    boolean success = false;
-    if (this.isStorageWritable())
+    this.checkForContext();
+    File diction = new File(this.getDictionDir(), filename);
+    BufferedReader reader = new BufferedReader(new FileReader(diction));
+    try
     {
-      this.lastSavedFile = filename;
-      filename += ".txt";
-      File dictionDir = this.getDictionDir();
-      //Create any necessary directories
-      if (!dictionDir.exists())
+      StringBuilder builder = new StringBuilder();
+      String line = reader.readLine();
+      while (line != null)
       {
-        dictionDir.mkdirs();
+        builder.append(line);
+        builder.append("\n");
+        line = reader.readLine();
       }
-      try
-      {
-        File diction = new File(dictionDir, filename);
-        FileOutputStream fout = new FileOutputStream(diction);
-        fout.write(content.getBytes());
-        fout.close();
-        success = true;
-      }
-      catch (IOException err)
-      {
-        Log.e(TAG, "Unable to write file");
-      }
+      return new String(builder.toString());
     }
-    return success;
-  }*/
+    finally
+    {
+      reader.close();
+    }
+  }
 }

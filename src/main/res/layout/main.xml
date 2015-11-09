@@ -2,11 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android" style="@style/Default.Container" android:orientation="vertical" android:layout_width="match_parent" android:layout_height="match_parent">
   <ScrollView android:id="@+id/notepad_container" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1"></ScrollView>
   <LinearLayout android:id="@+id/keyboard" android:layout_width="match_parent" android:layout_height="0dp" android:layout_weight="1" android:orientation="vertical">
-    <GridView android:id="@+id/keyboard_main" android:layout_width="match_parent" android:layout_height="wrap_content" android:columnWidth="25dp" android:numColumns="10" android:verticalSpacing="5dp" android:horizontalSpacing="5dp" android:stretchMode="columnWidth" android:gravity="center"></GridView>
-    <LinearLayout android:id="@+id/utility_row" android:layout_width="match_parent" android:layout_height="wrap_content">
-      <Button android:id="@+id/emphasis" style="@style/Keyboard" android:layout_marginLeft="-6dp" android:text="'"></Button>
-      <ImageButton android:id="@+id/spacebar" android:layout_width="273dp" android:layout_height="@dimen/keyboard_button_dim" android:layout_marginLeft="-7dp" android:src="@drawable/ic_space_bar_white"></ImageButton>
-      <ImageButton android:id="@+id/newline" style="@style/Keyboard" android:layout_marginLeft="-7dp" android:src="@drawable/ic_keyboard_return_white"></ImageButton>
-    </LinearLayout>
+    <LinearLayout android:id="@+id/keyboard_container_main" android:layout_width="match_parent" android:layout_height="wrap_content"></LinearLayout>
+    <LinearLayout android:id="@+id/keyboard_container_utility_row" android:layout_width="match_parent" android:layout_height="wrap_content"></LinearLayout>
   </LinearLayout>
 </LinearLayout>

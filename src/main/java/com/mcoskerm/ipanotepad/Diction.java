@@ -1,6 +1,7 @@
 package com.mcoskerm.ipanotepad;
 
 import java.io.File;
+import java.io.IOException;
 
 import android.content.Context;
 import android.text.Editable;
@@ -8,6 +9,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.Toast;
 
 public class Diction
 {
@@ -37,14 +39,43 @@ public class Diction
     return instance;
   }
 
+  /**
+   * Moves the cursor of the EditText to the given position
+   * @param pos The position to move the cursor to
+   */
   private void setCursor(int pos)
   {
     this.notepad.setSelection(pos);
   }
 
+  /**
+   * Logs an error the occurred within the Diction class
+   * @param msg The message to display with the error
+   * @param err The error that occured
+   */
+  private void logError(String msg, Throwable err)
+  {
+    Log.e(TAG, msg, err);
+    Toast toast = Toast.makeText(this.context, msg, Toast.LENGTH_SHORT);
+    toast.show();
+  }
+
+  /**
+   * Gets the directory that holds all the dicitons
+   * @return The directory that holds all the dictions
+   */
   public File getDir()
   {
-    return FileSystem.getInstance(this.context).getDictionDir();
+    File dir = null;
+    try
+    {
+      dir = FileSystem.getInstance(this.context).getDictionDir();
+    }
+    catch (IOException err)
+    {
+      this.logError("Error trying to access dictions files", err);
+    }
+    return dir;
   }
 
   /**
@@ -60,7 +91,6 @@ public class Diction
   {
     this.text = text;
     this.notepad.setText(text);
-    Log.d(TAG, this.text);
   }
 
   /**
@@ -83,6 +113,9 @@ public class Diction
     this.context = notepad.getContext();
   }
 
+  /**
+   * Determines whether or not the current working diciton is empty
+   */
   public boolean isEmpty()
   {
     return this.getNotepadText().isEmpty();
@@ -106,6 +139,43 @@ public class Diction
   private String normalize(String text)
   {
     return text.replaceAll(SLASH_CHAR, "").trim();
+  }
+
+
+  /**
+   * Adds the given key to the diction
+   * @param key The key to add to the diction
+   * @return The diction with the key added
+   */
+  private String add(View key)
+  {
+    String character = " ";
+    //If it is a button then it is assumed that it is not the spacebar
+    if (key instanceof Button)
+    {
+      Button button = (Button) key;
+      character = (String) button.getText();
+    }
+    else if (key.getId() == R.id.newline)
+    {
+      character = "\n";
+    }
+    return character;
+  }
+
+  /**
+   * Adds slashing to the given character if needed
+   * @param c The character to add slashing to
+   * @return The character with slashing if need
+   */
+  private String addSlashing(String c)
+  {
+    String text = c;
+    if (c.equals(" ") && this.slashingPref.equals("EACH_WORD"))
+    {
+      text = SLASH_CHAR + " " + SLASH_CHAR;
+    }
+    return text;
   }
 
   /**
@@ -150,46 +220,6 @@ public class Diction
   }
 
   /**
-   * Adds slashing to the given character if needed
-   * @param c The character to add slashing to
-   * @return The character with slashing if need
-   */
-  private String addSlashing(String c)
-  {
-    String text = c;
-    if (c.equals(" ") && this.slashingPref.equals("EACH_WORD"))
-    {
-      text = SLASH_CHAR + " " + SLASH_CHAR;
-    }
-    return text;
-  }
-
-  /**
-   * Determines if this diction has been saved
-   * @return Whether or not this diciton has been saved
-   */
-  public boolean wasSaved()
-  {
-    return FileSystem.getInstance(null).wasWritten();
-  }
-
-  private String add(View key)
-  {
-    String character = " ";
-    //If it is a button then it is assumed that it is not the spacebar
-    if (key instanceof Button)
-    {
-      Button button = (Button) key;
-      character = (String) button.getText();
-    }
-    else if (key.getId() == R.id.newline)
-    {
-      character = "\n";
-    }
-    return character;
-  }
-
-  /**
    * Gives the position of the text that needs to be removed
    * @param text The text that is having characters removed from it
    * @param start The initial start of the selection
@@ -211,6 +241,24 @@ public class Diction
       start = Math.max(start - removeCount, 0);
     }
     return start;
+  }
+
+  /**
+   * Loads the saved diction of the given filename
+   * @param filename The name of the file that holds the diction to load
+   */
+  public void load(String filename)
+  {
+    FileSystem fs = FileSystem.getInstance(this.context);
+    try
+    {
+      String diction = fs.read(filename);
+      this.setText(diction);
+    }
+    catch (IOException err)
+    {
+      this.logError("Unable to read diciton", err);
+    }
   }
 
   /**
@@ -260,9 +308,7 @@ public class Diction
    */
   public void reload()
   {
-    FileSystem fs = FileSystem.getInstance(this.context);
-    String prevDiction = fs.read(CACHE_NAME);
-    this.setText(prevDiction);
+    this.load(CACHE_NAME);
   }
 
   /**
@@ -271,7 +317,14 @@ public class Diction
   public void resave()
   {
     FileSystem fs = FileSystem.getInstance(this.context);
-    fs.save(this.getNotepadText());
+    try
+    {
+      fs.save(this.getNotepadText());
+    }
+    catch(IOException err)
+    {
+      this.logError("An error occured when resaving the current diction", err);
+    }
   }
 
   /**
@@ -280,8 +333,7 @@ public class Diction
    */
   public void save()
   {
-    FileSystem fs = FileSystem.getInstance(this.context);
-    fs.save(CACHE_NAME, this.getNotepadText());
+    this.save(CACHE_NAME);
   }
 
   /**
@@ -289,7 +341,23 @@ public class Diction
    */
   public void save(String filename)
   {
-    FileSystem fs = FileSystem.getInstance(this.context);
-    fs.save(filename, this.getNotepadText());
+    try
+    {
+      FileSystem fs = FileSystem.getInstance(this.context);
+      fs.save(filename, this.getNotepadText());
+    }
+    catch(IOException err)
+    {
+      this.logError("An error occured when saving the current diction", err);
+    }
+  }
+
+  /**
+   * Determines if this diction has been saved
+   * @return Whether or not this diciton has been saved
+   */
+  public boolean wasSaved()
+  {
+    return FileSystem.getInstance(null).wasWritten();
   }
 }

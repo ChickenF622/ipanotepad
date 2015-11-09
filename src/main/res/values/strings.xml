@@ -5,6 +5,7 @@
   <!--Menu Items-->
   <string name="about">About</string>
   <string name="donate">Donate</string>
+  <string name="open">Open</string>
   <string name="save">Save</string>
   <string name="save_as">Save As...</string>
   <string name="settings">Settings</string>
@@ -56,7 +57,7 @@
     <item>f</item>
     <!--Row 3-->
     <item>&#32;</item>
-    <item>&#32;</item>
+    <item name="emphasis">\'</item>
     <item>k</item>
     <item>g</item>
     <item name="eth">&#240;</item>

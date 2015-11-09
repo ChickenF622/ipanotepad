@@ -1,4 +1,6 @@
+~$*
 *.swp
+*.tmp
 prepros.cfg
 build/
 *.syntastic_javac_config

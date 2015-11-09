@@ -2,6 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
   <item android:id="@+id/save_as" android:title="@string/save_as"></item>
   <item android:id="@+id/save" android:title="@string/save" android:icon="@drawable/ic_save_white" android:showAsAction="ifRoom"></item>
+  <item android:id="@+id/open" android:title="@string/open" android:icon="@drawable/ic_folder_open_white" android:showAsAction="ifRoom"></item>
   <item android:id="@+id/share" android:title="@string/share" android:icon="@drawable/ic_share_white" android:showAsAction="ifRoom"></item>
   <item android:id="@+id/settings" android:title="@string/settings"></item>
 </menu>

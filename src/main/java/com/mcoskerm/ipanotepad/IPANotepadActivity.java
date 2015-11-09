@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.content.Context;
 import android.content.Intent;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -17,11 +18,15 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
 import uk.co.chrisjenx.calligraphy.CalligraphyContextWrapper;
 
 public class IPANotepadActivity extends Activity
 {
+  private final static String TAG = "IPANotepadActivity";
+  public final static int OPEN_FILE = 0;//Request code for opening a file
+
   /** Called when the activity is first created. */
   @Override
   public void onCreate(Bundle savedInstanceState)
@@ -30,19 +35,13 @@ public class IPANotepadActivity extends Activity
     PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
     setContentView(R.layout.main);
     NotepadFragment notepad = new NotepadFragment();
+    KeyboardFragment keyboard = new KeyboardFragment();
+    UtilityRowFragment utilRow = new UtilityRowFragment();
     this.getFragmentManager().beginTransaction()
       .add(R.id.notepad_container, notepad, "notepad_fragment")
+      .add(R.id.keyboard_container_main, keyboard, "keyboard_fragment")
+      .add(R.id.keyboard_container_utility_row, utilRow, "utility_row_fragment")
       .commit();
-    GridView keyboard = (GridView) this.findViewById(R.id.keyboard_main);
-    //Adapater handles the OnClick event since buttons are being used in this GridView
-    keyboard.setAdapter(new ButtonAdapter(this));
-    //Handle the other keys that are not included in the GridView
-    ImageButton backspace = (ImageButton) this.findViewById(R.id.newline);
-    Button emphasis = (Button) this.findViewById(R.id.emphasis);
-    ImageButton spacebar = (ImageButton) this.findViewById(R.id.spacebar);
-    emphasis.setOnClickListener(new KeyboardClickListener());
-    spacebar.setOnClickListener(new KeyboardClickListener());
-    backspace.setOnClickListener(new KeyboardClickListener());
   }
 
   @Override
@@ -82,6 +81,10 @@ public class IPANotepadActivity extends Activity
       case R.id.save_as:
         this.displaySaveAs();
         return true;
+      case R.id.open:
+        intent = new Intent(this, FileSelectActivity.class);
+        this.startActivityForResult(intent, OPEN_FILE);
+        return true;
       case R.id.settings:
         intent = new Intent(this, SettingsActivity.class);
         this.startActivity(intent);
@@ -91,11 +94,25 @@ public class IPANotepadActivity extends Activity
         intent.setAction(Intent.ACTION_SEND);
         intent.putExtra(Intent.EXTRA_TEXT, diction.getText());
         intent.setType("text/plain");
-        //intent = new Intent(this, FileSelectActivity.class);
         this.startActivity(intent);
         return true;
       default:
         return super.onOptionsItemSelected(item);
+    }
+  }
+
+  @Override
+  protected void onActivityResult(int requestCode, int resultCode, Intent data)
+  {
+    if (resultCode == Activity.RESULT_OK)
+    {
+      switch (requestCode)
+      {
+        case OPEN_FILE:
+          String filename = data.getStringExtra(Intent.EXTRA_TEXT);
+          Diction.getInstance().load(filename);
+          break;
+      }
     }
   }
 

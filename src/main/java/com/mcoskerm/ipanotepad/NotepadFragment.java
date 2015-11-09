@@ -39,10 +39,7 @@ class NotepadFragment extends Fragment
     super.onResume();
     EditText notepad = (EditText) this.getView().findViewById(R.id.notepad);
     Diction diction = Diction.getInstance();
-    Log.d(TAG, notepad.getText().toString());
-    Log.d(TAG, diction.getText());
     notepad.setText(diction.getText());
-    Log.d(TAG, notepad.getText().toString());
   }
 }
 
