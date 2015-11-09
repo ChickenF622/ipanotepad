@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
@@ -41,7 +42,11 @@ class UtilityRowFragment extends Fragment
             @Override
             public void onClick(View view)
             {
+              EditText notepad = (EditText) activity.findViewById(R.id.notepad);
+              //notepad.setSingleLine(true);
               InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
+              //Diction.getInstance().createComment();
+              imm.showSoftInput(notepad, InputMethodManager.SHOW_FORCED);
             }
           });
       }

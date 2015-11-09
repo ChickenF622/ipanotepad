@@ -8,11 +8,11 @@ public class Application extends android.app.Application
   public void onCreate()
   {
     super.onCreate();
-    CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
+    /*CalligraphyConfig.initDefault(new CalligraphyConfig.Builder()
         .setDefaultFontPath("fonts/LGSmartGothic-Regular.ttf")
         .setFontAttrId(R.attr.fontPath)
         .build()
-        );
+        );*/
     Diction.getInstance();
   }
 }

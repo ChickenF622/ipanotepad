@@ -128,9 +128,9 @@ public class IPANotepadActivity extends Activity
   /**
    * Adding the CalligraphyContextWrapper to the base context of the app to allow for the font to be modified
    */
-  @Override
+  /*@Override
   public void attachBaseContext(Context newBase)
   {
     super.attachBaseContext(CalligraphyContextWrapper.wrap(newBase));
-  }
+  }*/
 }

@@ -2,6 +2,7 @@ package com.mcoskerm.ipanotepad;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
 
 import android.content.Context;
 import android.text.Editable;
@@ -14,19 +15,16 @@ import android.widget.Toast;
 public class Diction
 {
   public static final String CACHE_NAME = "__current_diction__";
-  private final String SLASH_CHAR = "/";
   private final String TAG = "Diction";
   private static Diction instance;
+  private ArrayList<DictionLine> lines;
   private Context context;
   private EditText notepad;
-  private String slashingPref;
-  private String text;
 
   private Diction(EditText notepad)
   {
     this.notepad = notepad;
-    this.text = "";
-    this.slashingPref = "EACH_WORD";//TODO get default value from resource instead of hard code
+    this.lines = new ArrayList<>();
   }
 
   public static Diction getInstance()
@@ -60,6 +58,20 @@ public class Diction
     toast.show();
   }
 
+  public DictionLine getDictionLineAtPos(int pos)
+  {
+    int length = 0;
+    for (DictionLine line: this.lines)
+    {
+      //Add the lengths of the lines together until the position is < the length
+      length += line.length();
+      if (pos < length - 1)
+      {
+        return line;
+      }
+    }
+  }
+
   /**
    * Gets the directory that holds all the dicitons
    * @return The directory that holds all the dictions
@@ -84,12 +96,17 @@ public class Diction
    */
   public String getText()
   {
-    return this.text;
+    String text = "";
+    for (DictionLine line: this.lines)
+    {
+      text += line.getText();
+    }
+    return text;
   }
 
   public void setText(String text)
   {
-    this.text = text;
+    this.parseLines(text);
     this.notepad.setText(text);
   }
 
@@ -109,7 +126,6 @@ public class Diction
   public void setNotepad(EditText notepad)
   {
     this.notepad = notepad;
-    this.text = this.getNotepadText();
     this.context = notepad.getContext();
   }
 
@@ -127,27 +143,19 @@ public class Diction
    */
   public void setSlashing(String slashingPref)
   {
-    this.slashingPref = slashingPref;
-    this.updateSlashing();
+    DictionConfig.slashingPref = slashingPref;
+    for (DictionLine line: this.lines)
+    {
+      line.update();
+    }
   }
 
   /**
-   * Removes all of the slashing characters in the diction and trims the whitespace
-   * @param text The text to normalize
-   * @return The normalized text
+   * Gets the character from the given key
+   * @param key The key to retrieve the character from
+   * @return The character
    */
-  private String normalize(String text)
-  {
-    return text.replaceAll(SLASH_CHAR, "").trim();
-  }
-
-
-  /**
-   * Adds the given key to the diction
-   * @param key The key to add to the diction
-   * @return The diction with the key added
-   */
-  private String add(View key)
+  private String getCharFromKey(View key)
   {
     String character = " ";
     //If it is a button then it is assumed that it is not the spacebar
@@ -164,59 +172,16 @@ public class Diction
   }
 
   /**
-   * Adds slashing to the given character if needed
-   * @param c The character to add slashing to
-   * @return The character with slashing if need
+   * Parses the given text into seperate diction lines
+   * @param text The text to parse
    */
-  private String addSlashing(String c)
+  private void parseLines(String text)
   {
-    String text = c;
-    if (c.equals(" ") && this.slashingPref.equals("EACH_WORD"))
+    String[] lines = text.split("\\r?\\n");
+    for (String line: lines)
     {
-      text = SLASH_CHAR + " " + SLASH_CHAR;
+      this.lines.add(new DictionLine(line, ""));
     }
-    return text;
-  }
-
-  /**
-   * Updates the slashing of the diciton based on the slashing preference
-   */
-  private void updateSlashing()
-  {
-    String text = this.getNotepadText();
-    //TODO have case values derived from resource instead of hard code
-    switch(this.slashingPref)
-    {
-      case "EACH_WORD":
-        text = this.updateSlashing(text);
-        break;
-      case "ENTIRE_PHRASE":
-        //Remove all slash characters and add them to the beginning and ending of the diction
-        text = SLASH_CHAR + this.normalize(text) + SLASH_CHAR;
-        break;
-      case "NONE":
-        text = this.normalize(text);
-        break;
-    }
-    this.setText(text);
-  }
-
-  /**
-   * Updates the slashing of the given text using the EACH_WORD rule, this is an expensive operation
-   * and should only be used when the actual preference is changed
-   * @param text The text to change the slashing for
-   * @return The text with its slashing changed
-   */
-  private String updateSlashing(String text)
-  {
-    text = this.normalize(text);
-    String newText = SLASH_CHAR.toString();
-    for (char c: text.toCharArray())
-    {
-      newText += this.addSlashing(String.valueOf(c));
-    }
-    newText += SLASH_CHAR;
-    return newText;
   }
 
   /**
@@ -270,12 +235,13 @@ public class Diction
   {
     int start = Math.max(this.notepad.getSelectionStart(), 0);
     int end = Math.max(this.notepad.getSelectionEnd(), 0);
+    DictionLine line = this.getDictionLineAtPos(start);
     Editable text = this.notepad.getText();
     //Assume that the space should be the character appended
     String character = "";
     if (add)
     {
-      character = this.add(key);
+      character = this.getCharFromKey(key);
     }
     else //Backspace was clicked so delete a the selection instead of replacing it
     {
@@ -284,9 +250,8 @@ public class Diction
     }
     //Check to see if any slashing needs to be done
     int cursorPos = start;
-    character = this.addSlashing(character);
     //If slashing was added
-    if (this.slashingPref.equals("EACH_WORD") && character.contains(" "))
+    if (DictionConfig.slashingPref.equals("EACH_WORD") && character.contains(" "))
     {
       cursorPos += 2;
     }
