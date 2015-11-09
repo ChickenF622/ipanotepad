@@ -43,9 +43,7 @@ class UtilityRowFragment extends Fragment
             public void onClick(View view)
             {
               EditText notepad = (EditText) activity.findViewById(R.id.notepad);
-              //notepad.setSingleLine(true);
               InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-              //Diction.getInstance().createComment();
               imm.showSoftInput(notepad, InputMethodManager.SHOW_FORCED);
             }
           });
