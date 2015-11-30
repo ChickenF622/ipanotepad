@@ -15,10 +15,15 @@ public class DictionLine
     this("", "");
   }
 
-  public DictionLine(String diciton, String comment)
+  public DictionLine(String diction, String comment)
   {
     this.diction = diction;
     this.comment = comment;
+  }
+
+  public String getText()
+  {
+    return this.diction + " - " + this.comment;
   }
 
   /**
@@ -86,8 +91,40 @@ public class DictionLine
     }
   }
 
-  public void add(String character, int pos)
+  private void updatePart(String text, boolean isComment)
   {
+    if (isComment)
+    {
+      this.comment = text;
+    }
+    else
+    {
+      this.diction = text;
+    }
+  }
+
+  private String getPart(boolean isComment)
+  {
+    if (isComment)
+    {
+      return this.comment;
+    }
+    return this.diction;
+  }
+
+  public void add(String character, int pos, boolean isComment)
+  {
+    String text = this.getPart(isComment);
+    text = text.substring(0, pos) + character + text.substring(pos);
+    this.updatePart(text, isComment);
+  }
+
+  public void remove(int pos, boolean isComment)
+  {
+    String text = this.getPart(isComment);
+    int end = Math.min(pos + 1, text.length() - 1);
+    text = text.substring(0, pos) + text.substring(end);
+    this.updatePart(text, isComment);
   }
 
   public int length()

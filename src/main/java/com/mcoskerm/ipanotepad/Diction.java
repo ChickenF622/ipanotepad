@@ -32,7 +32,6 @@ public class Diction
     if (instance == null)
     {
       instance = new Diction(null);
-      Log.d("Diction", "New Instance");
     }
     return instance;
   }
@@ -70,6 +69,7 @@ public class Diction
         return line;
       }
     }
+    return null;
   }
 
   /**
@@ -199,7 +199,7 @@ public class Diction
       //Check to see if we are deleting slashing
       int removeCount = 1;
       String delChar = String.valueOf(text.charAt(start - 1));
-      if (delChar.equals(SLASH_CHAR))
+      if (delChar.equals("/"))
       {
         removeCount += 2;
       }
