@@ -7,7 +7,6 @@ import java.io.FileOutputStream;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-//import java.io.StringBuffer;
 
 import android.content.Context;
 import android.os.Environment;

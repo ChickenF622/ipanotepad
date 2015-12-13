@@ -12,19 +12,22 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
+import org.json.simple.parser.ParseException;
+
 public class Diction
 {
   public static final String CACHE_NAME = "__current_diction__";
   private final String TAG = "Diction";
   private static Diction instance;
-  private ArrayList<DictionLine> lines;
   private Context context;
+  private String comment;
   private EditText notepad;
 
   private Diction(EditText notepad)
   {
     this.notepad = notepad;
-    this.lines = new ArrayList<>();
   }
 
   public static Diction getInstance()
@@ -37,39 +40,29 @@ public class Diction
   }
 
   /**
-   * Moves the cursor of the EditText to the given position
-   * @param pos The position to move the cursor to
+   * Gets the character from the given key
+   * @param key The key to retrieve the character from
+   * @return The character
    */
-  private void setCursor(int pos)
+  private String getCharFromKey(View key)
   {
-    this.notepad.setSelection(pos);
-  }
-
-  /**
-   * Logs an error the occurred within the Diction class
-   * @param msg The message to display with the error
-   * @param err The error that occured
-   */
-  private void logError(String msg, Throwable err)
-  {
-    Log.e(TAG, msg, err);
-    Toast toast = Toast.makeText(this.context, msg, Toast.LENGTH_SHORT);
-    toast.show();
-  }
-
-  public DictionLine getDictionLineAtPos(int pos)
-  {
-    int length = 0;
-    for (DictionLine line: this.lines)
+    String character = " ";
+    //If it is a button then it is assumed that it is not the spacebar
+    if (key instanceof Button)
     {
-      //Add the lengths of the lines together until the position is < the length
-      length += line.length();
-      if (pos < length - 1)
-      {
-        return line;
-      }
+      Button button = (Button) key;
+      character = (String) button.getText();
     }
-    return null;
+    else if (key.getId() == R.id.newline)
+    {
+      character = "\n";
+    }
+    return character;
+  }
+
+  public String getComment()
+  {
+    return this.comment;
   }
 
   /**
@@ -96,27 +89,26 @@ public class Diction
    */
   public String getText()
   {
-    String text = "";
-    for (DictionLine line: this.lines)
-    {
-      text += line.getText();
-    }
-    return text;
+    return this.notepad.getText().toString();
   }
 
-  public void setText(String text)
+  public void setComment(String comment)
   {
-    this.parseLines(text);
-    this.notepad.setText(text);
+    this.comment = comment;
+  }
+
+  public void setComment(EditText commentField)
+  {
+    this.setComment(commentField.getText().toString());
   }
 
   /**
-   * Gets the text from the notepad Edittext directly
-   * @return The text of the notepad EditText
+   * Moves the cursor of the EditText to the given position
+   * @param pos The position to move the cursor to
    */
-  private String getNotepadText()
+  private void setCursor(int pos)
   {
-    return this.notepad.getText().toString();
+    this.notepad.setSelection(pos);
   }
 
   /**
@@ -130,58 +122,47 @@ public class Diction
   }
 
   /**
-   * Determines whether or not the current working diciton is empty
-   */
-  public boolean isEmpty()
-  {
-    return this.getNotepadText().isEmpty();
-  }
-
-  /**
    * Changes the current slashing preference and updates the text accordingly
    * @param slashingPref The slasing preference to change to
    */
   public void setSlashing(String slashingPref)
   {
-    DictionConfig.slashingPref = slashingPref;
-    for (DictionLine line: this.lines)
-    {
-      line.update();
-    }
+    Slashing.setPref(slashingPref);
+    this.setText(Slashing.update(this.getText()));
   }
 
   /**
-   * Gets the character from the given key
-   * @param key The key to retrieve the character from
-   * @return The character
+   * Sets the text of the diction, ie the notepad EditText
+   * @param text The text for the diction to be set to
    */
-  private String getCharFromKey(View key)
+  public void setText(String text)
   {
-    String character = " ";
-    //If it is a button then it is assumed that it is not the spacebar
-    if (key instanceof Button)
-    {
-      Button button = (Button) key;
-      character = (String) button.getText();
-    }
-    else if (key.getId() == R.id.newline)
-    {
-      character = "\n";
-    }
-    return character;
+    this.notepad.setText(text);
   }
 
   /**
-   * Parses the given text into seperate diction lines
-   * @param text The text to parse
+   * Determines whether or not the current working diciton is empty
    */
-  private void parseLines(String text)
+  public boolean isEmpty()
   {
-    String[] lines = text.split("\\r?\\n");
-    for (String line: lines)
-    {
-      this.lines.add(new DictionLine(line, ""));
-    }
+    return this.getText().isEmpty();
+  }
+
+  public int length()
+  {
+    return this.getText().length();
+  }
+
+  /**
+   * Logs an error the occurred within the Diction class
+   * @param msg The message to display with the error
+   * @param err The error that occured
+   */
+  private void logError(String msg, Throwable err)
+  {
+    Log.e(TAG, msg, err);
+    Toast toast = Toast.makeText(this.context, msg, Toast.LENGTH_SHORT);
+    toast.show();
   }
 
   /**
@@ -194,6 +175,10 @@ public class Diction
   private int remove(String text, int start, int end)
   {
     //No selection has been made so delete the character to the left of the cursor
+    if (start == 0 && end == 0)
+    {
+      return -1;
+    }
     if (start == end)
     {
       //Check to see if we are deleting slashing
@@ -215,12 +200,14 @@ public class Diction
   public void load(String filename)
   {
     FileSystem fs = FileSystem.getInstance(this.context);
+    JSONParser parser = new JSONParser();
     try
     {
-      String diction = fs.read(filename);
-      this.setText(diction);
+      JSONObject json = (JSONObject) parser.parse(fs.read(filename));
+      this.setText((String) json.get("diction"));
+      this.comment = (String) json.get("comment");
     }
-    catch (IOException err)
+    catch (IOException|ParseException err)
     {
       this.logError("Unable to read diciton", err);
     }
@@ -235,34 +222,36 @@ public class Diction
   {
     int start = Math.max(this.notepad.getSelectionStart(), 0);
     int end = Math.max(this.notepad.getSelectionEnd(), 0);
-    DictionLine line = this.getDictionLineAtPos(start);
     Editable text = this.notepad.getText();
     //Assume that the space should be the character appended
     String character = "";
+    System.out.println("H");
     if (add)
     {
       character = this.getCharFromKey(key);
+      character = Slashing.updateChar(character, start);
     }
     else //Backspace was clicked so delete a the selection instead of replacing it
     {
       character = "";
       start = this.remove(text.toString(), start, end);
+      if (start == -1)//Nothing to delete
+      {
+        return;
+      }
     }
     //Check to see if any slashing needs to be done
     int cursorPos = start;
-    //If slashing was added
-    if (DictionConfig.slashingPref.equals("EACH_WORD") && character.contains(" "))
-    {
-      cursorPos += 2;
-    }
     //If any characters were selected then they will be replaced otherwise this will simply
     //add the character where the cursor is
     text = text.replace(start, end, character);
-    this.setText(text.toString());
+    String newDiction = text.toString().replaceAll("//", "/");
+    Log.d(TAG, newDiction);
+    this.setText(newDiction);
     //Move the cursor back to the posistion it would be relative to the new text
     if (add)
     {
-      cursorPos++;
+      cursorPos += character.length();
     }
     this.notepad.setSelection(cursorPos);
   }
@@ -284,7 +273,7 @@ public class Diction
     FileSystem fs = FileSystem.getInstance(this.context);
     try
     {
-      fs.save(this.getNotepadText());
+      fs.save(this.getText());
     }
     catch(IOException err)
     {
@@ -302,14 +291,21 @@ public class Diction
   }
 
   /**
-   * Saves the current working diction under the given filename
+   * Saves the current working diction under the given filename, also formats the data
+   * to follow whatever the current slashing rules are
+   * @param filename The name of the file to save the content to
    */
   public void save(String filename)
   {
     try
     {
       FileSystem fs = FileSystem.getInstance(this.context);
-      fs.save(filename, this.getNotepadText());
+      JSONObject json = new JSONObject();
+      String diction = Slashing.update(this.getText());
+      json.put("diction", diction);
+      json.put("comment", this.comment);
+      fs.save(filename, json.toString());
+      this.setText(diction);
     }
     catch(IOException err)
     {

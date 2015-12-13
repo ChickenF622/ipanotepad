@@ -15,7 +15,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.TextView.OnEditorActionListener;
 
-class NotepadFragment extends Fragment
+public class NotepadFragment extends Fragment
 {
   private final String TAG = "NotepadFragment";
 

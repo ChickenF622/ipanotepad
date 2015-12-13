@@ -123,6 +123,8 @@ public class IPANotepadActivity extends Activity
   {
     DialogFragment saveAsFragment = new SaveAsFragment();
     saveAsFragment.show(getFragmentManager(), "save_as");
+    //Ensure the Dialog is not null when it is retrieved
+    getFragmentManager().executePendingTransactions();
   }
 
   /**

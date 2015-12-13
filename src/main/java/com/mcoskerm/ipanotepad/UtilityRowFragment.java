@@ -1,6 +1,7 @@
 package com.mcoskerm.ipanotepad;
 
 import android.app.Activity;
+import android.app.DialogFragment;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -14,7 +15,7 @@ import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
-class UtilityRowFragment extends Fragment
+public class UtilityRowFragment extends Fragment
 {
   private final String TAG = "UtilityRowFragment";
 
@@ -31,20 +32,19 @@ class UtilityRowFragment extends Fragment
     super.onActivityCreated(savedInstanceState);
     final Activity activity = this.getActivity();
     //Handle the other keys that are not included in the GridView
-    int[] utilButtons = {R.id.newline, R.id.spacebar, R.id.normal_keyboard};
+    int[] utilButtons = {R.id.newline, R.id.spacebar, R.id.comment};
     for (int id: utilButtons)
     {
       ImageButton button = (ImageButton) activity.findViewById(id);
-      if (id == R.id.normal_keyboard)
+      if (id == R.id.comment)
       {
         button.setOnClickListener(new OnClickListener()
           {
             @Override
             public void onClick(View view)
             {
-              EditText notepad = (EditText) activity.findViewById(R.id.notepad);
-              InputMethodManager imm = (InputMethodManager) activity.getSystemService(Context.INPUT_METHOD_SERVICE);
-              imm.showSoftInput(notepad, InputMethodManager.SHOW_FORCED);
+              DialogFragment commentFragment = new CommentFragment();
+              commentFragment.show(activity.getFragmentManager(), "save_as");
             }
           });
       }

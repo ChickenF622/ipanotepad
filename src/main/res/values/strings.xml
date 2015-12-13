@@ -13,6 +13,8 @@
   <!--Dialog Strings-->
   <string name="filename">Filename</string>
   <string name="cancel">Cancel</string>
+  <string name="comment">Comment</string>
+  <string name="ok">Ok</string>
   <!--Messages-->
   <!--Keyboard-->
   <string-array name="keyboard_keys">

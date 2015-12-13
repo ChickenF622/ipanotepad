@@ -11,8 +11,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
 
-import com.mcoskerm.ipanotepad.Diction;
-
 public class SaveAsFragment extends DialogFragment
 {
 

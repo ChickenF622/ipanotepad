@@ -13,7 +13,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.GridView;
 import android.widget.ImageButton;
 
-class KeyboardFragment extends Fragment
+public class KeyboardFragment extends Fragment
 {
   private final String TAG = "KeyboardFragment";
 
